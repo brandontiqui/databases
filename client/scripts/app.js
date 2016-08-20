@@ -60,19 +60,27 @@ var app = {
       data: { order: '-createdAt'},
       success: function(data) {
         // Don't bother if we have nothing to work with
-        if (!data.results || !data.results.length) { return; }
+
+        app.stopSpinner();
+
+        if (!data || !data.length) { 
+          console.log('No data or data length detected!');
+          return; 
+        }
 
         // Get the last message
-        var mostRecentMessage = data.results[data.results.length - 1];
+        var mostRecentMessage = data[data.length - 1];
         var displayedRoom = $('.chat span').first().data('roomname');
-        app.stopSpinner();
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
+
+          console.log(JSON.parse(data));
+
           // Update the UI with the fetched rooms
-          app.populateRooms(data.results);
+          app.populateRooms(JSON.parse(data));
 
           // Update the UI with the fetched messages
-          app.populateMessages(data.results, animate);
+          app.populateMessages(JSON.parse(data), animate);
 
           // Store the ID of the most recent message
           app.lastMessageId = mostRecentMessage.objectId;
@@ -139,12 +147,13 @@ var app = {
   },
 
   addMessage: function(data) {
-    if (!data.roomname) {
-      data.roomname = 'lobby';
+    // at this point data is an array of objects
+    if (!data.roomName) {
+      data.roomName = 'lobby';
     }
 
     // Only add messages that are in our current room
-    if (data.roomname === app.roomname) {
+    if (data.roomName === app.roomname) {
       // Create a div to hold the chats
       var $chat = $('<div class="chat"/>');
 
@@ -159,7 +168,7 @@ var app = {
       }
 
       var $message = $('<br><span/>');
-      $message.text(data.text).appendTo($chat);
+      $message.text(data.message).appendTo($chat);
 
       // Add the message to the UI
       app.$chats.append($chat);
