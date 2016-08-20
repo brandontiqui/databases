@@ -11,12 +11,13 @@ describe('Persistent Node Chat Server', function() {
   beforeEach(function(done) {
     dbConnection = mysql.createConnection({
       user: 'root',
-      password: '',
+      password: ' ',
       database: 'chat'
     });
     dbConnection.connect();
+    console.log('connected to db');
 
-       var tablename = ""; // TODO: fill this out
+    var tablename = 'Messages'; // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
@@ -49,15 +50,18 @@ describe('Persistent Node Chat Server', function() {
 
         // TODO: You might have to change this test to get all the data from
         // your message table, since this is schema-dependent.
-        var queryString = 'SELECT * FROM messages';
+        var queryString = 'SELECT * FROM Users';
         var queryArgs = [];
 
         dbConnection.query(queryString, queryArgs, function(err, results) {
+          if (err) {
+            console.log(err);
+          }
           // Should have one result:
           expect(results.length).to.equal(1);
 
           // TODO: If you don't have a column named text, change this test.
-          expect(results[0].text).to.equal('In mercy\'s name, three days is all I need.');
+          expect(results[0].message).to.equal('In mercy\'s name, three days is all I need.');
 
           done();
         });
