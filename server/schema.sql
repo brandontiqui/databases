@@ -16,12 +16,12 @@ CREATE TABLE Users (
 CREATE TABLE Messages (
   /* Describe your table here.*/
   messageId int(6) PRIMARY KEY AUTO_INCREMENT,
-  message VARCHAR(255) NOT NULL,
-  roomName VARCHAR(15) NOT NULL,
-  userId int(6) NOT NULL,
+  message VARCHAR(255),
+  roomName VARCHAR(15),
+  userId int(6)
 
   -- FOREIGN KEY (roomId) REFERENCES Rooms(roomId),
-  FOREIGN KEY (userId) REFERENCES Users(userId)
+  -- FOREIGN KEY (userId) REFERENCES Users(userId)
 );
 /* Create other tables and define schemas for them here! */
 
