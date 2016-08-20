@@ -29,6 +29,6 @@ CREATE TABLE Messages (
 
 
 /*  Execute this file from the command line by typing:
- *    mysql -u root < server/schema.sql
+ *    mysql -u root < server/schema.sql -p
  *  to create the database and the tables.*/
 

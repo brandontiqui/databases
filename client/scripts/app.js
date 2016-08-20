@@ -2,7 +2,7 @@ var app = {
 
   //TODO: The current 'toggleFriend' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'https://api.parse.com/1/classes/messages/',
+  server: 'classes/messages',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -79,7 +79,7 @@ var app = {
         }
       },
       error: function(data) {
-        console.error('chatterbox: Failed to fetch messages');
+        console.error('chatterbox: Failed to fetch messages ', data);
       }
     });
   },

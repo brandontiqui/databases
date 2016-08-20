@@ -5,11 +5,23 @@ var db = require('../db/index');
 // WHAT IF WE POST TO MESSAGE TABLE, BUT THE USER IS NOT YET IN THE
 // USER TABLE??
 
+module.exports.defaultCorsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-headers': 'content-type, accept',
+  'access-control-max-age': 10, // Seconds.
+  'Content-Type': 'application/json'
+};
+
+module.exports.headers = module.exports.defaultCorsHeaders;
+// module.exports.headers['Content-Type'] = 'text/plain';
+
 
 module.exports = {
+  // a function which handles a get request for all messages
   messages: {
     get: function (request, response) {
-      console.log('messages get hi');
+      console.log('Messages GET request...');
 
       // on GET request to our Messages table, we should Query our Messages and
       // GET what we're asked for
@@ -19,14 +31,31 @@ module.exports = {
         if (error) {
           console.log('Messages GET Error');
         } else {
-          response.writeHead(200);
+          response.writeHead(200, module.exports.headers);
           response.end(JSON.stringify(results));
         }
       });
 
 
 
-    }, // a function which handles a get request for all messages
+    },
+
+    options: function(request, response) {
+      console.log('Messages OPTIONS request...');
+
+      // on GET request to our Messages table, we should Query our Messages and
+      // GET what we're asked for
+
+      var queryString = 'SELECT * FROM Messages ORDER BY messageId DESC;';
+      var messagesQuery = db.dbConnection.query(queryString, function(error, results) {
+        if (error) {
+          console.log('Messages GET Error');
+        } else {
+          response.writeHead(200, module.exports.headers);
+          response.end(JSON.stringify(results));
+        }
+      });      
+    },
 
     // a function which handles posting a message to the database
     post: function (request, response) {
@@ -71,7 +100,7 @@ module.exports = {
                   });
                 } else {
                   console.log('Closing connection');
-                  response.writeHead(302);
+                  response.writeHead(302, module.exports.headers);
                   response.end();
                 }
               });
@@ -96,7 +125,7 @@ module.exports = {
         if (error) {
           console.log('Users GET Error');
         } else {
-          response.writeHead(200);
+          response.writeHead(200, module.exports.headers);
           response.end(JSON.stringify(results));
         }
       });
@@ -122,6 +151,7 @@ module.exports = {
           // if there's an error, probably means that the user isn't in the table
           // add the user to the table
         } else { // user is already in table
+          response.writeHead(201, module.exports.headers);
           response.end();
         }
 
